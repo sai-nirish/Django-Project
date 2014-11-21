@@ -1,0 +1,33 @@
+<html>
+<head>
+	<title>{{ user_name }}'s Home</title>
+</head>
+<body>
+	<table>
+		<tr>
+			<td> User: {{ user_name }}</td>
+			<td> Email: {{ user_email }}</td>
+			<td> Rollnumber: {{ roll_number }}</td>
+		</tr>
+	</table>
+	{%if saved%}
+	<p>Choices saved {{ choices }}</p>
+	{%endif%}
+	
+	{%if locked%}
+	<p>You already locked your choices</p>
+	{%endif%}
+	
+	{%if vlocked%}
+	<p>Your choices are locked</p>
+	{%endif%}
+	
+	<ul>
+		<li><a href = "/main/check">Check courses according to 2012 open and closing ranks</a></li>
+		<li><a href = "/main/fill">Fill options</a></li>
+		<li><a href = "/main/verify">Verify filled options</a></li>
+		<li><a href = "/signin/logout">logout</a></li>
+		<li><a href="/accounts/password_change">change password</a></li>
+	</ul>
+</body>
+</html>

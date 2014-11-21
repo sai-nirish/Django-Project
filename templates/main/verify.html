@@ -1,0 +1,15 @@
+<html>
+	<head>
+		<title>Verify options</title>
+	</head>
+	<body>
+		<ol>
+			{% for choice in choice_list %}
+			<li>{{ choice }}</li>
+			{% endfor %}
+		</ol>
+		{% if unlocked %}
+		<a href = "/main/lock/">Lock these choices</a>
+		{% endif %}
+	</body>
+</html>

@@ -1,0 +1,159 @@
+<html>
+	<head>
+		<title>Fill options</title>
+		<script>
+			function add(course,cid,cname) {
+				var table = document.getElementById("choices");
+				var rowCount = table.rows.length;
+				for (var i = 0; i < rowCount; i++) {
+					var row = table.rows[i];
+					if (row==course.parentNode.parentNode) {
+						table.deleteRow(i);
+					}
+				}
+
+				//var ul = document.getElementById("added");
+				//var li = document.createElement("li");
+				//li.appendChild(document.createTextNode(cid+" "+cname));
+				//ul.appendChild(li);
+				var list = document.getElementById("list");
+				var num = list.getElementsByTagName("p").length;
+				num++;
+				var txt = document.createElement("P");
+				txt.id = "p"+num;
+				txt.innerHTML = "Option " + (num)+" ";
+				
+				var btn = document.getElementById("Final");
+				var input = document.createElement("input");
+				input.type = "text";
+                input.name = "option"+num;
+                input.id = "option"+num;
+                input.style.backgroundColor = "#FFFFFF";
+                input.style.width = "80%";
+                input.value = cid+" "+cname;
+                input.readOnly = true;
+				list.insertBefore(txt,btn);
+                list.insertBefore(input, btn);
+                
+                var nbtn = document.createElement("a");
+                nbtn.id = "a"+num;
+                nbtn.innerHTML = " Delete";
+                nbtn.setAttribute('onclick','cdelete("option'+num+'")');
+                list.insertBefore(nbtn,btn);
+                list.appendChild(document.createElement("br"));
+			}
+			
+			function cdelete(cnum) {
+				//var btn = document.getElementById("Filled");
+				//btn.disabled = true;
+				var input = document.getElementById(cnum);
+				var list = document.getElementById("list");
+				var num = list.getElementsByTagName("p").length;
+				var table = document.getElementById("choices");
+				var total = (list.children.length-2)/3;
+				var start = parseInt(cnum.substring(6))
+				var cname = input.value;
+				var cid = cname.substring(0,5);
+				var nrows = table.rows.length;
+				cname = cname.substring(6);
+				for(var i = 1; i < nrows; i++) {
+					var rcid = table.rows[i].cells[0].innerHTML;
+					if(rcid > cid) {
+						var row = table.insertRow(i);
+						break;
+					}
+				}
+				var cell1 = row.insertCell(0);
+				var cell2 = row.insertCell(1);
+				var cell3 = row.insertCell(2);
+				cell1.innerHTML = cid;
+				cell2.innerHTML = cname;
+				var rbtn = document.createElement("button");
+				rbtn.innerHTML = "Add";
+				rbtn.onclick = (function (a,b,c){ return function(){add(a,b,c);} })(rbtn,cid,cname);
+				cell3.appendChild(rbtn);
+				for(var i = start; i<num; i++) {
+					var iname = "option"+i;
+					j = i+1
+					var nname = "option"+j;
+					var inew = document.getElementById(iname);
+					var nnew = document.getElementById(nname);
+					inew.readOnly = false;
+					var natxt = nnew.value;
+					inew.value = natxt;
+					inew.readOnly = true;
+				}
+				var pname = "p"+num;
+				var iname = "option"+num;
+				var aname = "a"+num;
+				var p = document.getElementById(pname);
+				var i = document.getElementById(iname);
+				var a = document.getElementById(aname);
+				p.parentNode.removeChild(p);
+				i.parentNode.removeChild(i);
+				a.parentNode.removeChild(a);
+			}
+		</script>
+		
+		<style type="text/css">
+			#left { position: absolute; left: 0; width: 50%; }
+			#right { position: absolute; right: 0; width: 50%;}
+		</style>
+		
+	</head>
+	<body>
+		<table>
+		<tr>
+			<td> User: {{ user_name }}</td>
+			<td> Email: {{ user_email }}</td>
+		</tr>
+		</table>
+		<div id = "left">
+			<table border = "1" id = "choices">
+				<tr>
+					<td>Course ID</td>
+					<td>Course name</td>
+					<td></td>
+				</tr>
+				{% for cour, cname in course_list %}
+				<tr>
+					<td>{{ cour }}</td>
+					<td>{{ cname }}</td>
+					<td><button type = "button" onclick = "add(this,'{{ cour }}','{{ cname }}')">Add</button></td>
+				</tr>
+<!--
+				<li id = {{ cour }} onclick = add("{{ cour }}")>{{ cour }} {{ cname }}</li>
+-->
+				{% endfor %}
+			</table>
+		</div>
+		<div id = "right" align = "center">
+<!--
+			<ul id = "added">
+			</ul>
+-->
+			
+			<form id = "list" action = "/main/" method = "post">
+				{% csrf_token %}
+				{% for choiceid in choice_list %}
+				<p id = "p{{ forloop.counter }}">Option {{ forloop.counter }} </p><input type = "text" readonly = "readonly" name = "option{{ forloop.counter }}" value = "{{ choiceid }}" id = "option{{ forloop.counter }}" style="width:80%"}> <a id = "a{{ forloop.counter }}" onclick = "cdelete('option{{ forloop.counter }}')">Delete</a>
+				{% endfor %}
+				<input id = "Final" type = "Submit" value = "Save and continue">
+			</form>
+<!--
+			<table>
+				<tr>
+					<td>Orange</td>
+				</tr>
+			</table>
+-->
+<!--
+			<button type = "button" onclick = "sopen()">Click Me</button>
+		<form>
+			<input value = "Meher" style = "background-color:#FFFFFF; font-size:14px" disabled>
+		</form>
+-->
+		</div>
+
+	</body>
+</html>

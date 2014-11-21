@@ -1,0 +1,32 @@
+<html>
+<head>
+	<title>Check courses</title>
+</head>
+<body>
+	<form method = "post" action = "/main/check/">
+		{% csrf_token %}
+		Rank: <input type = "text" name = "rank">
+		<br>
+		Category: <select name = "cat">
+			<Option value = ""></Option>
+			<Option value = "gen">General</Option>
+			<Option value = "obc">OBC</Option>
+			<Option value = "sc">SC</Option>
+			<Option value = "st">ST</Option>
+			<Option value = "genpd">General-PD</Option>
+			<Option value = "obcpd">OBC-PD</Option>
+			<Option value = "scpd">SC-PD</Option>
+			<Option value = "stpd">ST-PD</Option>
+		<br>
+		<input type = "submit" value = "Check">
+		<br>
+	</form>
+	{% if submitted %}
+	<ul>
+	{% for course in courselist %}
+		<li> {{ course }} </li>
+	{% endfor %}
+	</ul>
+	{% endif %}
+</body>
+</html>
